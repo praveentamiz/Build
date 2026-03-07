@@ -6,18 +6,22 @@ pipeline:
 
     - stage: Checkout Code
       steps:
-        - checkout: scm
+        - "checkout scm"
 
     - stage: Copy IIS Files
       steps:
-        - powershell: |
-            Write-Host "Copying files to server"
-            New-Item -ItemType Directory -Path C:\Batchfile -Force
-            Copy-Item ".\iis_structure.csv" "C:\Batchfile\iis_structure.csv" -Force
-            Copy-Item ".\create_iis.ps1" "C:\Batchfile\create_iis.ps1" -Force
+        - |
+          powershell '''
+          Write-Host "Copying files to server"
+          New-Item -ItemType Directory -Path C:\Batchfile -Force
+          Copy-Item "$env:WORKSPACE\iis_structure.csv" "C:\Batchfile\iis_structure.csv" -Force
+          Copy-Item "$env:WORKSPACE\create_iis.ps1" "C:\Batchfile\create_iis.ps1" -Force
+          '''
 
     - stage: Create IIS Site and Applications
       steps:
-        - powershell: |
-            Write-Host "Running IIS Script"
-            powershell.exe -ExecutionPolicy Bypass -File C:\Batchfile\create_iis.ps1
+        - |
+          powershell '''
+          Write-Host "Running IIS Script"
+          powershell.exe -ExecutionPolicy Bypass -File C:\Batchfile\create_iis.ps1
+          '''
