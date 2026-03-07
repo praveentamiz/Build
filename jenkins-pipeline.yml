@@ -25,5 +25,5 @@ pipeline:
         - |
           powershell '''
           Write-Host "Running IIS Script"
-          powershell.exe -ExecutionPolicy Bypass -File C:\Batchfile\create_sites.ps1
+          powershell.exe -ExecutionPolicy Bypass -File C:\\Batchfile\\create_sites.ps1
           '''
