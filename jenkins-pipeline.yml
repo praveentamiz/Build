@@ -6,7 +6,8 @@ pipeline:
 
     - stage: Checkout Code
       steps:
-        - "checkout scm"
+        - |
+          git clone https://github.com/praveentamiz/Build.git .
 
     - stage: Copy IIS Files
       steps:
