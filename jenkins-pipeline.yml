@@ -4,27 +4,27 @@ pipeline:
 
   stages:
 
-    - stage: Checkout
+    - stage: Checkout Code
       steps:
         - checkout: scm
 
-    - stage: Verify Workspace
+    - stage: Show Workspace Files
       steps:
         - powershell: |
-            Write-Host "Workspace files:"
+            Write-Host "Files in workspace:"
             Get-ChildItem $env:WORKSPACE
 
     - stage: Copy IIS Files
       steps:
         - powershell: |
-            Write-Host "Creating C:\Batchfile"
+            Write-Host "Creating Batchfile folder"
             New-Item -ItemType Directory -Path C:\\Batchfile -Force
 
             Write-Host "Copying files"
             Copy-Item "$env:WORKSPACE\\iis_structure.csv" "C:\\Batchfile\\iis_structure.csv" -Force
             Copy-Item "$env:WORKSPACE\\create_sites.ps1" "C:\\Batchfile\\create_sites.ps1" -Force
 
-    - stage: Create IIS Site and Applications
+    - stage: Run IIS Script
       steps:
         - powershell: |
             Write-Host "Running IIS script"
