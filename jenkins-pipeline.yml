@@ -1,13 +1,12 @@
 pipeline:
-  agent any
+  agent:
+    any: true
 
   stages:
 
-    - stage: Checkout Code
+    - stage: Checkout
       steps:
-        - git:
-            url: https://github.com/praveentamiz/Build.git
-            branch: main
+        - checkout: scm
 
     - stage: Verify Workspace
       steps:
@@ -18,15 +17,15 @@ pipeline:
     - stage: Copy IIS Files
       steps:
         - powershell: |
-            Write-Host "Creating folder C:\Batchfile"
+            Write-Host "Creating C:\Batchfile"
             New-Item -ItemType Directory -Path C:\\Batchfile -Force
 
-            Write-Host "Copying CSV and PowerShell script"
+            Write-Host "Copying files"
             Copy-Item "$env:WORKSPACE\\iis_structure.csv" "C:\\Batchfile\\iis_structure.csv" -Force
             Copy-Item "$env:WORKSPACE\\create_sites.ps1" "C:\\Batchfile\\create_sites.ps1" -Force
 
     - stage: Create IIS Site and Applications
       steps:
         - powershell: |
-            Write-Host "Running IIS creation script"
+            Write-Host "Running IIS script"
             powershell.exe -ExecutionPolicy Bypass -File C:\\Batchfile\\create_sites.ps1
