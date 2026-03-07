@@ -6,19 +6,18 @@ pipeline:
 
     - stage: Checkout Code
       steps:
-        - |
-          bat '''
-          git clone https://github.com/praveentamiz/Build.git .
-          '''
+        - "checkout scm"
 
     - stage: Copy IIS Files
       steps:
         - |
           powershell '''
           Write-Host "Copying files to server"
-          New-Item -ItemType Directory -Path C:\\Batchfile -Force
-          Copy-Item "$env:WORKSPACE\\iis_structure.csv" "C:\\Batchfile\\iis_structure.csv" -Force
-          Copy-Item "$env:WORKSPACE\\create_iis.ps1" "C:\\Batchfile\\create_iis.ps1" -Force
+
+          New-Item -ItemType Directory -Path C:\Batchfile -Force
+
+          Copy-Item "$env:WORKSPACE\vlpl\iis_structure.csv" "C:\Batchfile\iis_structure.csv" -Force
+          Copy-Item "$env:WORKSPACE\vlpl\create_sites.ps1" "C:\Batchfile\create_sites.ps1" -Force
           '''
 
     - stage: Create IIS Site and Applications
@@ -26,5 +25,5 @@ pipeline:
         - |
           powershell '''
           Write-Host "Running IIS Script"
-          powershell.exe -ExecutionPolicy Bypass -File C:\\Batchfile\\create_iis.ps1
+          powershell.exe -ExecutionPolicy Bypass -File C:\Batchfile\create_sites.ps1
           '''
