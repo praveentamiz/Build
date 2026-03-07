@@ -1,0 +1,4 @@
+Type,Name,AppPool,PhysicalPath,Port
+Site,vlpl,vlplpoolqa,C:\BuildOutput\vlpl,8083
+Application,vlplusmqa,vlplusmpoolqa,C:\BuildOutput\vlplusmqa,
+Application,vlplusmapiqa,vlplusmapipoolqa,C:\BuildOutput\usmapi,
