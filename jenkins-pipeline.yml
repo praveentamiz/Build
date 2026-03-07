@@ -4,28 +4,37 @@ pipeline:
 
   stages:
 
-    - stage: Checkout Code
+    - stage: "Checkout Code"
       steps:
-        - checkout: scm
+        - checkout:
+            scm:
+              git:
+                url: "https://github.com/praveentamiz/Build.git"
+                branch: "main"
 
-    - stage: Show Workspace Files
+    - stage: "Show Workspace Files"
       steps:
         - powershell: |
-            Write-Host "Files in workspace:"
+            Write-Host "Listing Workspace Files"
             Get-ChildItem $env:WORKSPACE
 
-    - stage: Copy IIS Files
+    - stage: "Create Batch Folder"
       steps:
         - powershell: |
-            Write-Host "Creating Batchfile folder"
-            New-Item -ItemType Directory -Path C:\\Batchfile -Force
+            Write-Host "Creating folder C:\Batchfile"
+            New-Item -ItemType Directory -Path "C:\Batchfile" -Force
 
-            Write-Host "Copying files"
-            Copy-Item "$env:WORKSPACE\\iis_structure.csv" "C:\\Batchfile\\iis_structure.csv" -Force
-            Copy-Item "$env:WORKSPACE\\create_sites.ps1" "C:\\Batchfile\\create_sites.ps1" -Force
-
-    - stage: Run IIS Script
+    - stage: "Copy Required Files"
       steps:
         - powershell: |
-            Write-Host "Running IIS script"
-            powershell.exe -ExecutionPolicy Bypass -File C:\\Batchfile\\create_sites.ps1
+            Write-Host "Copying CSV file"
+            Copy-Item "$env:WORKSPACE\iis_structure.csv" "C:\Batchfile\iis_structure.csv" -Force
+
+            Write-Host "Copying PowerShell script"
+            Copy-Item "$env:WORKSPACE\create_sites.ps1" "C:\Batchfile\create_sites.ps1" -Force
+
+    - stage: "Run IIS Script"
+      steps:
+        - powershell: |
+            Write-Host "Executing IIS script"
+            powershell.exe -ExecutionPolicy Bypass -File "C:\Batchfile\create_sites.ps1"
