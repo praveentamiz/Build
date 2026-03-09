@@ -6,23 +6,21 @@ pipeline:
 
     - stage: "Checkout Code"
       steps:
-        - git:
-            url: "https://github.com/praveentamiz/Build.git"
-            branch: "jenkinsyml"
+        - "git clone https://github.com/praveentamiz/Build.git ."
 
     - stage: "Check Files"
       steps:
-        - bat 'dir'
+        - "bat dir"
 
     - stage: "Create Folder"
       steps:
-        - bat 'if not exist C:\\Jenkinsyml mkdir C:\\Jenkinsyml'
+        - "bat if not exist C:\\Jenkinsyml mkdir C:\\Jenkinsyml"
 
     - stage: "Copy Files"
       steps:
-        - bat 'copy create_sites.ps1 C:\\Jenkinsyml\\create_sites.ps1 /Y'
-        - bat 'copy iis_structure.csv C:\\Jenkinsyml\\iis_structure.csv /Y'
+        - "bat copy create_sites.ps1 C:\\Jenkinsyml\\create_sites.ps1 /Y"
+        - "bat copy iis_structure.csv C:\\Jenkinsyml\\iis_structure.csv /Y"
 
     - stage: "Run IIS Script"
       steps:
-        - powershell 'C:\\Jenkinsyml\\create_sites.ps1'
+        - "powershell C:\\Jenkinsyml\\create_sites.ps1"
