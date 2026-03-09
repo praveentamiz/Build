@@ -5,41 +5,36 @@ pipeline:
     SITE_NAME: vlpl
     SITE_PORT: '8084'
     ROOT_FOLDER: C:\\BuildOutput\\vlpl
+    APP_POOL_ROOT: vlplpoolprod
+    APP_POOL_SUB1: vlplusmpoolprod
+    APP_POOL_SUB2: vlplusmapipoolprod
+    FOLDER_SUB1: C:\\BuildOutput\\vlplusmqa
+    FOLDER_SUB2: C:\\BuildOutput\\usmapi
+    SUB_APP1: /vlplusmqprod
+    SUB_APP2: /vlplusmapiprod
 
   stages:
 
-    - stage: Setup_AppPools_And_Folders
+    - stage: Create_AppPools
       steps:
-        - script: |
-            // Define all AppPools and corresponding folders and sub-app paths
-            apps = [
-              [name: 'vlplpoolprod', folder: 'C:\\BuildOutput\\vlpl', path: ''],
-              [name: 'vlplusmpoolprod', folder: 'C:\\BuildOutput\\vlplusmqa', path: '/vlplusmqprod'],
-              [name: 'vlplusmapipoolprod', folder: 'C:\\BuildOutput\\usmapi', path: '/vlplusmapiprod']
-            ]
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd list apppool /name:%APP_POOL_ROOT% || C:\\Windows\\System32\\inetsrv\\appcmd add apppool /name:%APP_POOL_ROOT%"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd list apppool /name:%APP_POOL_SUB1% || C:\\Windows\\System32\\inetsrv\\appcmd add apppool /name:%APP_POOL_SUB1%"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd list apppool /name:%APP_POOL_SUB2% || C:\\Windows\\System32\\inetsrv\\appcmd add apppool /name:%APP_POOL_SUB2%"'
 
-            for (app in apps) {
-              // Create AppPool if it doesn't exist
-              bat "C:\\Windows\\System32\\inetsrv\\appcmd list apppool /name:${app.name} || C:\\Windows\\System32\\inetsrv\\appcmd add apppool /name:${app.name}"
-              
-              // Create folder if it doesn't exist
-              bat "if not exist \"${app.folder}\" mkdir \"${app.folder}\""
-            }
-
-    - stage: Create_Root_Site
+    - stage: Create_Folders
       steps:
-        - script: |
-            // Create root IIS site if it doesn't exist
-            bat "C:\\Windows\\System32\\inetsrv\\appcmd list site /name:%SITE_NAME% || C:\\Windows\\System32\\inetsrv\\appcmd add site /name:%SITE_NAME% /bindings:http/*:%SITE_PORT%: /physicalPath:%ROOT_FOLDER%"
-            
-            // Assign root site to its AppPool
-            bat "C:\\Windows\\System32\\inetsrv\\appcmd set app %SITE_NAME%/ /applicationPool:vlplpoolprod"
+        - 'bat "if not exist %ROOT_FOLDER% mkdir %ROOT_FOLDER%"'
+        - 'bat "if not exist %FOLDER_SUB1% mkdir %FOLDER_SUB1%"'
+        - 'bat "if not exist %FOLDER_SUB2% mkdir %FOLDER_SUB2%"'
 
-    - stage: Create_Sub_Applications
+    - stage: Create_Site
       steps:
-        - script: |
-            // Loop through sub-apps (skip the first root app)
-            for (app in apps[1..-1]) {
-              bat "C:\\Windows\\System32\\inetsrv\\appcmd list app /site.name:%SITE_NAME% /path:${app.path} || C:\\Windows\\System32\\inetsrv\\appcmd add app /site.name:%SITE_NAME% /path:${app.path} /physicalPath:${app.folder}"
-              bat "C:\\Windows\\System32\\inetsrv\\appcmd set app %SITE_NAME%%app.path% /applicationPool:${app.name}"
-            }
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd list site /name:%SITE_NAME% || C:\\Windows\\System32\\inetsrv\\appcmd add site /name:%SITE_NAME% /bindings:http/*:%SITE_PORT%: /physicalPath:%ROOT_FOLDER%"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd set app %SITE_NAME%/ /applicationPool:%APP_POOL_ROOT%"'
+
+    - stage: Create_Applications
+      steps:
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd list app /site.name:%SITE_NAME% /path:%SUB_APP1% || C:\\Windows\\System32\\inetsrv\\appcmd add app /site.name:%SITE_NAME% /path:%SUB_APP1% /physicalPath:%FOLDER_SUB1%"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd set app %SITE_NAME%%SUB_APP1% /applicationPool:%APP_POOL_SUB1%"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd list app /site.name:%SITE_NAME% /path:%SUB_APP2% || C:\\Windows\\System32\\inetsrv\\appcmd add app /site.name:%SITE_NAME% /path:%SUB_APP2% /physicalPath:%FOLDER_SUB2%"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd set app %SITE_NAME%%SUB_APP2% /applicationPool:%APP_POOL_SUB2%"'
