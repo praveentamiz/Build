@@ -17,9 +17,10 @@ pipeline:
 
     - stage: Create_AppPools
       steps:
-        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd add apppool /name:%APP_POOL_ROOT%"'
-        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd add apppool /name:%APP_POOL_SUB1%"'
-        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd add apppool /name:%APP_POOL_SUB2%"'
+        # Only create app pool if it does not exist
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd list apppool /name:%APP_POOL_ROOT% || C:\\Windows\\System32\\inetsrv\\appcmd add apppool /name:%APP_POOL_ROOT%"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd list apppool /name:%APP_POOL_SUB1% || C:\\Windows\\System32\\inetsrv\\appcmd add apppool /name:%APP_POOL_SUB1%"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd list apppool /name:%APP_POOL_SUB2% || C:\\Windows\\System32\\inetsrv\\appcmd add apppool /name:%APP_POOL_SUB2%"'
 
     - stage: Create_Folders
       steps:
@@ -29,15 +30,14 @@ pipeline:
 
     - stage: Create_Site
       steps:
-        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd add site /name:%SITE_NAME% /bindings:http/*:%SITE_PORT%: /physicalPath:%FOLDER_ROOT%"'
-
-    - stage: Assign_Site_AppPool
-      steps:
-        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd set app \"%SITE_NAME%/\" /applicationPool:%APP_POOL_ROOT%"'
+        # Only create site if it does not exist
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd list site /name:%SITE_NAME% || C:\\Windows\\System32\\System32\\inetsrv\\appcmd add site /name:%SITE_NAME% /bindings:http/*:%SITE_PORT%: /physicalPath:%FOLDER_ROOT%"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd set app \\"%SITE_NAME%/\\" /applicationPool:%APP_POOL_ROOT%"'
 
     - stage: Create_Applications
       steps:
-        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd add app /site.name:%SITE_NAME% /path:%SUB_APP1% /physicalPath:%FOLDER_SUB1%"'
-        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd set app \"%SITE_NAME%%SUB_APP1%\" /applicationPool:%APP_POOL_SUB1%"'
-        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd add app /site.name:%SITE_NAME% /path:%SUB_APP2% /physicalPath:%FOLDER_SUB2%"'
-        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd set app \"%SITE_NAME%%SUB_APP2%\" /applicationPool:%APP_POOL_SUB2%"'
+        # Only create apps if they do not exist
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd list app /site.name:%SITE_NAME% /path:%SUB_APP1% || C:\\Windows\\System32\\inetsrv\\appcmd add app /site.name:%SITE_NAME% /path:%SUB_APP1% /physicalPath:%FOLDER_SUB1%"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd set app \\"%SITE_NAME%%SUB_APP1%\\" /applicationPool:%APP_POOL_SUB1%"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd list app /site.name:%SITE_NAME% /path:%SUB_APP2% || C:\\Windows\\System32\\inetsrv\\appcmd add app /site.name:%SITE_NAME% /path:%SUB_APP2% /physicalPath:%FOLDER_SUB2%"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd set app \\"%SITE_NAME%%SUB_APP2%\\" /applicationPool:%APP_POOL_SUB2%"'
