@@ -10,8 +10,8 @@ pipeline:
     FOLDER_ROOT: C:\\BuildOutput\\vlpl
     FOLDER_SUB1: C:\\BuildOutput\\vlplusmqa
     FOLDER_SUB2: C:\\BuildOutput\\usmapi
-    SUB_APP1: /vlplusmqa
-    SUB_APP2: /vlplusmapiqa
+    SUB_APP1: /vlplusmqprod
+    SUB_APP2: /vlplusmapiprod
 
   stages:
 
