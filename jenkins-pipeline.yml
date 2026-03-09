@@ -1,20 +1,19 @@
 pipeline:
   agent: any
 
-  parameters:
-    - string: SITE_NAME=vlpl
-    - string: SITE_PORT=8084
-    - string: APP_POOL_ROOT=vlplpoolqa
-    - string: APP_POOL_SUB1=vlplusmpoolqa
-    - string: APP_POOL_SUB2=vlplusmapipoolqa
-    - string: FOLDER_ROOT=C:\BuildOutput\vlpl
-    - string: FOLDER_SUB1=C:\BuildOutput\vlplusmqa
-    - string: FOLDER_SUB2=C:\BuildOutput\usmapi
-    - string: SUB_APP1=/vlplusmqa
-    - string: SUB_APP2=/vlplusmapiqa
+  environment:
+    SITE_NAME: vlpl
+    SITE_PORT: '8084'
+    APP_POOL_ROOT: vlplpoolqa
+    APP_POOL_SUB1: vlplusmpoolqa
+    APP_POOL_SUB2: vlplusmapipoolqa
+    FOLDER_ROOT: C:\BuildOutput\vlpl
+    FOLDER_SUB1: C:\BuildOutput\vlplusmqa
+    FOLDER_SUB2: C:\BuildOutput\usmapi
+    SUB_APP1: /vlplusmqa
+    SUB_APP2: /vlplusmapiqa
 
   stages:
-
     - stage: Create_AppPools
       steps:
         - bat: "C:\\Windows\\System32\\inetsrv\\appcmd add apppool /name:%APP_POOL_ROOT%"
