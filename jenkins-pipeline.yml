@@ -7,9 +7,9 @@ pipeline:
     APP_POOL_ROOT: vlplpoolqa
     APP_POOL_SUB1: vlplusmpoolqa
     APP_POOL_SUB2: vlplusmapipoolqa
-    FOLDER_ROOT: C:\BuildOutput\vlpl
-    FOLDER_SUB1: C:\BuildOutput\vlplusmqa
-    FOLDER_SUB2: C:\BuildOutput\usmapi
+    FOLDER_ROOT: C:\\BuildOutput\\vlpl
+    FOLDER_SUB1: C:\\BuildOutput\\vlplusmqa
+    FOLDER_SUB2: C:\\BuildOutput\\usmapi
     SUB_APP1: /vlplusmqa
     SUB_APP2: /vlplusmapiqa
 
