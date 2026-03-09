@@ -16,29 +16,37 @@ pipeline:
   stages:
 
     - stage: Create_AppPools
-      steps: 
-        bat: |
+      bat: |
+        if not exist "C:\Windows\System32\inetsrv\appcmd list apppool /name:%APP_POOL_ROOT%" (
           C:\Windows\System32\inetsrv\appcmd add apppool /name:%APP_POOL_ROOT%
+        )
+        if not exist "C:\Windows\System32\inetsrv\appcmd list apppool /name:%APP_POOL_SUB1%" (
           C:\Windows\System32\inetsrv\appcmd add apppool /name:%APP_POOL_SUB1%
+        )
+        if not exist "C:\Windows\System32\inetsrv\appcmd list apppool /name:%APP_POOL_SUB2%" (
           C:\Windows\System32\inetsrv\appcmd add apppool /name:%APP_POOL_SUB2%
+        )
 
     - stage: Create_Folders
-      steps:
-        bat: |
-          if not exist %FOLDER_ROOT% mkdir %FOLDER_ROOT%
-          if not exist %FOLDER_SUB1% mkdir %FOLDER_SUB1%
-          if not exist %FOLDER_SUB2% mkdir %FOLDER_SUB2%
+      bat: |
+        if not exist "%FOLDER_ROOT%" mkdir "%FOLDER_ROOT%"
+        if not exist "%FOLDER_SUB1%" mkdir "%FOLDER_SUB1%"
+        if not exist "%FOLDER_SUB2%" mkdir "%FOLDER_SUB2%"
 
     - stage: Create_Site
-      steps:
-        bat: |
+      bat: |
+        if not exist "C:\Windows\System32\inetsrv\appcmd list site /name:%SITE_NAME%" (
           C:\Windows\System32\inetsrv\appcmd add site /name:%SITE_NAME% /bindings:http/*:%SITE_PORT%: /physicalPath:%FOLDER_ROOT%
-          C:\Windows\System32\inetsrv\appcmd set app %SITE_NAME%/ /applicationPool:%APP_POOL_ROOT%
+        )
+        C:\Windows\System32\inetsrv\appcmd set app %SITE_NAME%/ /applicationPool:%APP_POOL_ROOT%
 
     - stage: Create_Applications
-      steps:
-        bat: |
+      bat: |
+        if not exist "C:\Windows\System32\inetsrv\appcmd list app /site.name:%SITE_NAME% /path:%SUB_APP1%" (
           C:\Windows\System32\inetsrv\appcmd add app /site.name:%SITE_NAME% /path:%SUB_APP1% /physicalPath:%FOLDER_SUB1%
-          C:\Windows\System32\inetsrv\appcmd set app %SITE_NAME%%SUB_APP1% /applicationPool:%APP_POOL_SUB1%
+        )
+        C:\Windows\System32\inetsrv\appcmd set app %SITE_NAME%%SUB_APP1% /applicationPool:%APP_POOL_SUB1%
+        if not exist "C:\Windows\System32\inetsrv\appcmd list app /site.name:%SITE_NAME% /path:%SUB_APP2%" (
           C:\Windows\System32\inetsrv\appcmd add app /site.name:%SITE_NAME% /path:%SUB_APP2% /physicalPath:%FOLDER_SUB2%
-          C:\Windows\System32\inetsrv\appcmd set app %SITE_NAME%%SUB_APP2% /applicationPool:%APP_POOL_SUB2%
+        )
+        C:\Windows\System32\inetsrv\appcmd set app %SITE_NAME%%SUB_APP2% /applicationPool:%APP_POOL_SUB2%
