@@ -1,31 +1,19 @@
 pipeline:
-  agent: any
+  agent:
+    any: true
 
   stages:
 
-    - stage: Checkout
+    - stage: "Show Workspace"
       steps:
-        - script: |
-            git clone https://github.com/praveentamiz/Build.git .
+        - "echo Workspace files"
+        - "dir"
 
-    - stage: Show Workspace
+    - stage: "Copy Files"
       steps:
-        - script: |
-            echo "Workspace files:"
-            dir
+        - "powershell -Command \"Copy-Item 'iis_structure.csv' 'C:\\Batchfile\\iis_structure.csv' -Force\""
+        - "powershell -Command \"Copy-Item 'create_sites.ps1' 'C:\\Batchfile\\create_sites.ps1' -Force\""
 
-    - stage: Create Folder
+    - stage: "Run IIS Script"
       steps:
-        - script: |
-            powershell -Command "New-Item -ItemType Directory -Path C:\\Batchfile -Force"
-
-    - stage: Copy Files
-      steps:
-        - script: |
-            powershell -Command "Copy-Item iis_structure.csv C:\\Batchfile\\iis_structure.csv -Force"
-            powershell -Command "Copy-Item create_sites.ps1 C:\\Batchfile\\create_sites.ps1 -Force"
-
-    - stage: Run IIS Script
-      steps:
-        - script: |
-            powershell -ExecutionPolicy Bypass -File C:\\Batchfile\\create_sites.ps1
+        - "powershell -ExecutionPolicy Bypass -File C:\\Batchfile\\create_sites.ps1"
