@@ -21,20 +21,20 @@ pipeline:
     - stage: "Create Batch Folder"
       steps:
         - powershell: |
-            Write-Host "Creating folder C:\Batchfile"
-            New-Item -ItemType Directory -Path "C:\Batchfile" -Force
+            Write-Host "Creating folder C:\\Batchfile"
+            New-Item -ItemType Directory -Path "C:\\Batchfile" -Force
 
     - stage: "Copy Required Files"
       steps:
         - powershell: |
             Write-Host "Copying CSV file"
-            Copy-Item "$env:WORKSPACE\iis_structure.csv" "C:\Batchfile\iis_structure.csv" -Force
+            Copy-Item "$env:WORKSPACE\\iis_structure.csv" "C:\\Batchfile\iis_structure.csv" -Force
 
             Write-Host "Copying PowerShell script"
-            Copy-Item "$env:WORKSPACE\create_sites.ps1" "C:\Batchfile\create_sites.ps1" -Force
+            Copy-Item "$env:WORKSPACE\\create_sites.ps1" "C:\\Batchfile\\create_sites.ps1" -Force
 
     - stage: "Run IIS Script"
       steps:
         - powershell: |
             Write-Host "Executing IIS script"
-            powershell.exe -ExecutionPolicy Bypass -File "C:\Batchfile\create_sites.ps1"
+            powershell.exe -ExecutionPolicy Bypass -File "C:\\Batchfile\\create_sites.ps1"
