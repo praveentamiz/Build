@@ -2,55 +2,16 @@ pipeline:
   agent: any
 
   parameters:
-    - name: SITE_NAME
-      type: string
-      default: vlpl
-      description: IIS Site Name
-
-    - name: SITE_PORT
-      type: string
-      default: '8084'
-      description: Port Number for IIS Site
-
-    - name: APP_POOL_ROOT
-      type: string
-      default: vlplpoolqa
-      description: Root App Pool for site
-
-    - name: APP_POOL_SUB1
-      type: string
-      default: vlplusmpoolqa
-      description: App Pool for sub app 1
-
-    - name: APP_POOL_SUB2
-      type: string
-      default: vlplusmapipoolqa
-      description: App Pool for sub app 2
-
-    - name: FOLDER_ROOT
-      type: string
-      default: C:\BuildOutput\vlpl
-      description: Root Folder for site
-
-    - name: FOLDER_SUB1
-      type: string
-      default: C:\BuildOutput\vlplusmqa
-      description: Folder for sub app 1
-
-    - name: FOLDER_SUB2
-      type: string
-      default: C:\BuildOutput\usmapi
-      description: Folder for sub app 2
-
-    - name: SUB_APP1
-      type: string
-      default: /vlplusmqa
-      description: Path for sub app 1
-
-    - name: SUB_APP2
-      type: string
-      default: /vlplusmapiqa
-      description: Path for sub app 2
+    - string: SITE_NAME=vlpl
+    - string: SITE_PORT=8084
+    - string: APP_POOL_ROOT=vlplpoolqa
+    - string: APP_POOL_SUB1=vlplusmpoolqa
+    - string: APP_POOL_SUB2=vlplusmapipoolqa
+    - string: FOLDER_ROOT=C:\BuildOutput\vlpl
+    - string: FOLDER_SUB1=C:\BuildOutput\vlplusmqa
+    - string: FOLDER_SUB2=C:\BuildOutput\usmapi
+    - string: SUB_APP1=/vlplusmqa
+    - string: SUB_APP2=/vlplusmapiqa
 
   stages:
 
