@@ -3,11 +3,6 @@ pipeline:
     any: true
 
   stages:
-
-    - stage: "Checkout Code"
-      steps:
-        - "bat git clone https://github.com/praveentamiz/Build.git ."
-
     - stage: "Check Files"
       steps:
         - "bat dir"
