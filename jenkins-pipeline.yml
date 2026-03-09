@@ -4,9 +4,9 @@ pipeline:
   environment:
     SITE_NAME: vlpl
     SITE_PORT: '8084'
-    APP_POOL_ROOT: vlplpoolqa
-    APP_POOL_SUB1: vlplusmpoolqa
-    APP_POOL_SUB2: vlplusmapipoolqa
+    APP_POOL_ROOT: vlplpoolprod
+    APP_POOL_SUB1: vlplusmpoolprod
+    APP_POOL_SUB2: vlplusmapipoolprod
     FOLDER_ROOT: C:\\BuildOutput\\vlpl
     FOLDER_SUB1: C:\\BuildOutput\\vlplusmqa
     FOLDER_SUB2: C:\\BuildOutput\\usmapi
