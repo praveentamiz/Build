@@ -5,27 +5,28 @@ pipeline:
 
     - stage: Create_AppPools
       steps:
-        - "bat \"C:\\Windows\\System32\\inetsrv\\appcmd add apppool /name:vlplpoolqa\""
-        - "bat \"C:\\Windows\\System32\\inetsrv\\appcmd add apppool /name:vlplusmpoolqa\""
-        - "bat \"C:\\Windows\\System32\\inetsrv\\appcmd add apppool /name:vlplusmapipoolqa\""
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd add apppool /name:vlplpoolqa"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd add apppool /name:vlplusmpoolqa"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd add apppool /name:vlplusmapipoolqa"'
 
-    - stage: Create_Physical_Paths
+    - stage: Create_Folders
       steps:
-        - "bat \"if not exist C:\\BuildOutput\\vlpl mkdir C:\\BuildOutput\\vlpl\""
-        - "bat \"if not exist C:\\BuildOutput\\vlplusmqa mkdir C:\\BuildOutput\\vlplusmqa\""
-        - "bat \"if not exist C:\\BuildOutput\\usmapi mkdir C:\\BuildOutput\\usmapi\""
+        - 'bat "if not exist C:\\BuildOutput\\vlpl mkdir C:\\BuildOutput\\vlpl"'
+        - 'bat "if not exist C:\\BuildOutput\\vlplusmqa mkdir C:\\BuildOutput\\vlplusmqa"'
+        - 'bat "if not exist C:\\BuildOutput\\usmapi mkdir C:\\BuildOutput\\usmapi"'
 
-    - stage: Create_IIS_Site
+    - stage: Create_Site
       steps:
-        - "bat \"C:\\Windows\\System32\\inetsrv\\appcmd add site /name:vlpl /bindings:http/*:8083: /physicalPath:C:\\BuildOutput\\vlpl\""
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd add site /name:vlpl /bindings:http/*:8083: /physicalPath:C:\\BuildOutput\\vlpl"'
 
     - stage: Assign_Site_AppPool
       steps:
-        - "bat \"C:\\Windows\\System32\\inetsrv\\appcmd set app \\\"vlpl/\\\" /applicationPool:vlplpoolqa\""
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd set app \"vlpl/\" /applicationPool:vlplpoolqa"'
 
     - stage: Create_Applications
       steps:
-        - "bat \"C:\\Windows\\System32\\inetsrv\\appcmd add app /site.name:vlpl /path:/vlplusmqa /physicalPath:C:\\BuildOutput\\vlplusmqa\""
-        - "bat \"C:\\Windows\\System32\\inetsrv\\appcmd set app \\\"vlpl/vlplusmqa\\\" /applicationPool:vlplusmpoolqa\""
-        - "bat \"C:\\Windows\\System32\\inetsrv\\appcmd add app /site.name:vlpl /path:/vlplusmapiqa /physicalPath:C:\\BuildOutput\\usmapi\""
-        - "bat \"C:\\Windows\\System32\\inetsrv\\appcmd set app \\\"vlpl/vlplusmapiqa\\\" /applicationPool:vlplusmapipoolqa\""
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd add app /site.name:vlpl /path:/vlplusmqa /physicalPath:C:\\BuildOutput\\vlplusmqa"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd set app \"vlpl/vlplusmqa\" /applicationPool:vlplusmpoolqa"'
+
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd add app /site.name:vlpl /path:/vlplusmapiqa /physicalPath:C:\\BuildOutput\\usmapi"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd set app \"vlpl/vlplusmapiqa\" /applicationPool:vlplusmapipoolqa"'
