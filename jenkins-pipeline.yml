@@ -6,14 +6,14 @@ pipeline:
 
     - stage: "Show Workspace"
       steps:
-        - "echo Workspace files"
-        - "dir"
+        - 'echo Workspace files'
+        - 'dir'
 
     - stage: "Copy Files"
       steps:
-        - "powershell Copy-Item iis_structure.csv C:\\Batchfile\\iis_structure.csv -Force"
-        - "powershell Copy-Item create_sites.ps1 C:\\Batchfile\\create_sites.ps1 -Force"
+        - 'powershell Copy-Item iis_structure.csv C:\Batchfile\iis_structure.csv -Force'
+        - 'powershell Copy-Item create_sites.ps1 C:\Batchfile\create_sites.ps1 -Force'
 
     - stage: "Run IIS Script"
       steps:
-        - "powershell -ExecutionPolicy Bypass -File C:\\Batchfile\\create_sites.ps1"
+        - 'powershell -ExecutionPolicy Bypass -File C:\Batchfile\create_sites.ps1'
