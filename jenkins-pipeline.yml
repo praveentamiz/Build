@@ -33,11 +33,11 @@ pipeline:
 
     - stage: Assign_Site_AppPool
       steps:
-        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd set app \\"%SITE_NAME%/\\" /applicationPool:%APP_POOL_ROOT%"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd set app \"%SITE_NAME%/\" /applicationPool:%APP_POOL_ROOT%"'
 
     - stage: Create_Applications
       steps:
         - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd add app /site.name:%SITE_NAME% /path:%SUB_APP1% /physicalPath:%FOLDER_SUB1%"'
-        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd set app \\"%SITE_NAME%%SUB_APP1%\\" /applicationPool:%APP_POOL_SUB1%"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd set app \"%SITE_NAME%%SUB_APP1%\" /applicationPool:%APP_POOL_SUB1%"'
         - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd add app /site.name:%SITE_NAME% /path:%SUB_APP2% /physicalPath:%FOLDER_SUB2%"'
-        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd set app \\"%SITE_NAME%%SUB_APP2%\\" /applicationPool:%APP_POOL_SUB2%"'
+        - 'bat "C:\\Windows\\System32\\inetsrv\\appcmd set app \"%SITE_NAME%%SUB_APP2%\" /applicationPool:%APP_POOL_SUB2%"'
