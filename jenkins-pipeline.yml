@@ -4,19 +4,15 @@ pipeline:
 
   stages:
 
-    - stage: "Run IIS Setup"
+    - stage: "Show Workspace"
       steps:
-        - |
-          powershell -ExecutionPolicy Bypass -Command "
-          Write-Host 'Workspace Files';
-          Get-ChildItem;
+        - "bat dir"
 
-          Write-Host 'Copy CSV';
-          Copy-Item iis_structure.csv C:/Batchfile/iis_structure.csv -Force;
+    - stage: "Copy Files"
+      steps:
+        - "bat copy iis_structure.csv C:\\Batchfile\\iis_structure.csv /Y"
+        - "bat copy create_sites.ps1 C:\\Batchfile\\create_sites.ps1 /Y"
 
-          Write-Host 'Copy Script';
-          Copy-Item create_sites.ps1 C:/Batchfile/create_sites.ps1 -Force;
-
-          Write-Host 'Run IIS Script';
-          powershell -ExecutionPolicy Bypass -File C:/Batchfile/create_sites.ps1
-          "
+    - stage: "Run IIS Script"
+      steps:
+        - "bat powershell -ExecutionPolicy Bypass -File C:\\Batchfile\\create_sites.ps1"
