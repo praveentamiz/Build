@@ -1,21 +1,37 @@
 pipeline:
-  agent:
-    any: true
+  agent: any
 
   stages:
-    - stage: "Check Files"
-      steps:
-        - "bat dir"
 
-    - stage: "Create Folder"
+    - stage: Create_AppPools
       steps:
-        - "bat if not exist C:\\Jenkinsyml mkdir C:\\Jenkinsyml"
+        - bat: |
+            %windir%\system32\inetsrv\appcmd add apppool /name:"vlplpoolqa"
+            %windir%\system32\inetsrv\appcmd add apppool /name:"vlplusmpoolqa"
+            %windir%\system32\inetsrv\appcmd add apppool /name:"vlplusmapipoolqa"
 
-    - stage: "Copy Files"
+    - stage: Create_Physical_Paths
       steps:
-        - "bat copy create_sites.ps1 C:\\Jenkinsyml\\create_sites.ps1 /Y"
-        - "bat copy iis_structure.csv C:\\Jenkinsyml\\iis_structure.csv /Y"
+        - bat: |
+            if not exist C:\BuildOutput\vlpl mkdir C:\BuildOutput\vlpl
+            if not exist C:\BuildOutput\vlplusmqa mkdir C:\BuildOutput\vlplusmqa
+            if not exist C:\BuildOutput\usmapi mkdir C:\BuildOutput\usmapi
 
-    - stage: "Run IIS Script"
+    - stage: Create_IIS_Site
       steps:
-        - "powershell C:\\Jenkinsyml\\create_sites.ps1"
+        - bat: |
+            %windir%\system32\inetsrv\appcmd add site /name:"vlpl" /bindings:http/*:8083: /physicalPath:"C:\BuildOutput\vlpl"
+
+    - stage: Assign_Site_AppPool
+      steps:
+        - bat: |
+            %windir%\system32\inetsrv\appcmd set app "vlpl/" /applicationPool:"vlplpoolqa"
+
+    - stage: Create_Applications
+      steps:
+        - bat: |
+            %windir%\system32\inetsrv\appcmd add app /site.name:"vlpl" /path:/vlplusmqa /physicalPath:"C:\BuildOutput\vlplusmqa"
+            %windir%\system32\inetsrv\appcmd set app "vlpl/vlplusmqa" /applicationPool:"vlplusmpoolqa"
+
+            %windir%\system32\inetsrv\appcmd add app /site.name:"vlpl" /path:/vlplusmapiqa /physicalPath:"C:\BuildOutput\usmapi"
+            %windir%\system32\inetsrv\appcmd set app "vlpl/vlplusmapiqa" /applicationPool:"vlplusmapipoolqa"
